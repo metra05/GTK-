@@ -54,14 +54,14 @@ void serialJalan (GtkWidget *wid, gpointer ptr)
   int tes33=0;
   char deviceActive2 [30];//="/dev/ttyUSB0";
   
-  g_print("menggunakan usbttl actve di: %s ",deviceActive);  //ingat ada /n di akhir deviceactiv ini akibat /n di selected saat pemilihan device
+  g_print("menggunakan usbttl actve di: %s ",deviceActive);  //ingat ada \n di akhir deviceactiv ini akibat \n di selected saat pemilihan device
   //strncpy(deviceActive2, deviceActive,12);	//strncpy(c, "string", 6);
   g_print("%d",strlen(deviceActive));//sizeof(deviceActive));
   g_print("nilai baudrate: %0.0f\n", baudrate);
 
   //getchar();
   strcpy(deviceActive2, deviceActive);
-  int size = strlen(deviceActive2); //Total size of selected karena ada /n yang harus dihapus
+  int size = strlen(deviceActive2); //Total size of selected karena ada \n yang harus dihapus
   deviceActive2[size-1] = '\0';
 
   if ((fd = serialOpen (deviceActive2, baudrate)) < 0)  //("/dev/ttyUSB0", baudrate)) < 0)  //("/dev/ttyUSB0", 115200)) < 0)
@@ -95,7 +95,7 @@ static GString *time = NULL;
      }
 **/
 
-  for (;;)	//blok ini meneyebabkan hang
+  for (;;)	//blok ini meneyebabkan hang ""ingat loop forever didalam gtk sangat tidak bagus
   //while (tes33<100)//(fd!=10)//serialDataAvail (fd))
   {
     char t= serialGetchar(fd);
@@ -150,7 +150,7 @@ void combo_changed (GtkWidget *wid, gpointer ptr)
   char *selected = gtk_combo_box_text_get_active_text ( GTK_COMBO_BOX_TEXT (wid)); 
   
   //ini penting
- // int size = strlen(selected); //Total size of selected karena ada /n yang harus dihapus
+ // int size = strlen(selected); //Total size of selected karena ada \n yang harus dihapus
  // selected[size-1] = '\0';
   
   
@@ -159,7 +159,7 @@ void combo_changed (GtkWidget *wid, gpointer ptr)
   //g_string_printf(deviceActive,"/dev/%s",teks);
   //strcpy(deviceActive,selected);
   //g_print("%s ---",deviceActive);	// perhatikan disi selalu ganti baris
-  g_print(" %d ", strlen(selected)); //seharusnya 7 untuk ttyUSB0 tapi kebaca 8
+  g_print(" %d ", strlen(selected));    //seharusnya 7 untuk ttyUSB0 tapi kebaca 8, -->ketemu karena input dari stdio mengandung \n
   g_print("%s ---",selected);	
   
   g_print ("The value of the combo is %d %s---\n", sel, deviceActive); 
@@ -185,7 +185,7 @@ int main( int argc, char **argv )
   char buff[100][100];
   
   /* Open the command for reading. */ 
-  fp = popen("ls /sys/class/tty/ |tail ","r"); //ls -al /dev/tty* | grep USB","r");  // ///bin/ls /etc/", "r");
+  fp = popen("ls /sys/class/tty/ |tail ","r"); 		//ls -al /dev/tty* | grep USB","r");  // /bin/ls /etc/", "r");
   if (fp == NULL) {
     printf("Failed to run command\n" );
     exit(1);
@@ -203,7 +203,7 @@ int main( int argc, char **argv )
   j=i;
   
   for(i=0;i<j;i++){
-     printf(" %d %s",i, buff[i]); //nah disini kelihatan ada /n(newline) padahal gakada /n
+     printf(" %d %s",i, buff[i]); //nah disini kelihatan ada /n(newline) padahal gakada \n
    }
   //printf(" 5. %s", buff[5]);
   
@@ -236,8 +236,8 @@ int main( int argc, char **argv )
     char buff2[30];
     gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (comb), buff[i]);//sprintf(buff2,"%s",buff[i]));//"Option 1"); 
     gtk_combo_box_set_active (GTK_COMBO_BOX (comb), 0);
-   }
-   g_signal_connect (comb, "changed", G_CALLBACK (combo_changed), deviceActive);
+  }
+  g_signal_connect (comb, "changed", G_CALLBACK (combo_changed), deviceActive);
   
   //combo select baudrate
   GtkWidget *combBaud = gtk_combo_box_text_new (); 
@@ -263,7 +263,7 @@ int main( int argc, char **argv )
   gtk_box_pack_start (GTK_BOX (box), combBaud, TRUE, TRUE, 0); 
   gtk_box_pack_start (GTK_BOX (box), btn1, TRUE, TRUE, 0);  //connect
   gtk_box_pack_start (GTK_BOX (box), btn, TRUE, TRUE, 0);  //close
-//  gtk_container_add(GTK_CONTAINER (box), timer);
+  //gtk_container_add(GTK_CONTAINER (box), timer);
 	
   gtk_container_add (GTK_CONTAINER (win), box); 
   gtk_widget_show_all (win); 
